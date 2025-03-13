@@ -1,4 +1,4 @@
-package x;
+package Ex6_4;
 import java.util.Scanner;
 import java.util.HashMap;
 public class DaysInMonth {

@@ -1,4 +1,4 @@
-package triangle;
+package Ex6_3;
 import java.util.Scanner;
 public class triangle {
     public static void main(String[] args) {
