@@ -1,6 +1,8 @@
 package aims;
 
 public class DigitalVideoDisc {
+	private static int nbDigitalVideoDiscs = 0;
+	private int id;
     private String title;
     private String category;
     private String director;
@@ -8,7 +10,11 @@ public class DigitalVideoDisc {
     private float cost;
 	public String getTitle() {
 		return title;
+	}	
+	public void setTitle(String title) {
+		this.title = title;
 	}
+
 	public String getCategory() {
 		return category;
 	}
