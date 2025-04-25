@@ -1,0 +1,36 @@
+4. Kiểu trả về của phương thức toString() là String.
+14.
+* Câu hỏi 1:
+- Việc viết constructor cho cả lớp cha và lớp con giúp khởi tạo đầy đủ dữ liệu khi tạo đối tượng mới.
+- Nếu constructor đã khởi tạo tất cả các thuộc tính cần thiết, các setter (phương thức thiết lập giá trị) trở nên thừa và có thể bỏ đi để code gọn hơn và tránh thay đổi ngoài ý muốn (immutability).
+* Câu hỏi 2:
+- Các lớp CompactDisc và Cart là ví dụ điển hình:
+	+ CompactDisc chứa ArrayList<Track> ⇒ CD là tập hợp (aggregate) của các Track.
+	+ Cart chứa danh sách các Media ⇒ giỏ hàng là aggregate của media.
+
+- Với các lớp aggregate, constructor nên khởi tạo các thành phần con để đảm bảo trạng thái hợp lệ ban đầu.
+15.
+* Câu hỏi 1:
+- Với lớp Media: hai đối tượng được coi là bằng nhau nếu title giống nhau.
+- Với lớp Track: phải cùng title và length.
+* Câu hỏi 2:
+- Nếu không kiểm tra kiểu trước khi ép kiểu (cast), sẽ bị ClassCastException tại runtime.
+- Vì vậy, phải kiểm tra instanceof trước khi ép kiểu. Nếu không phải, trả về false.
+17.
+* Câu hỏi 1:
+Lớp nên implement Comparable là lớp Media: Vì Media là lớp cha của Book, DigitalVideoDisc, CompactDisc → Khi Media implements Comparable<Media>, tất cả lớp con đều kế thừa khả năng so sánh.
+* Câu hỏi 2:
+- Theo title (alphabetical)
+- Nếu trùng title, so sánh theo giá giảm dần (cost) thì compareTo() có thể được viết như sau:
+	+ So sánh title bằng String.compareToIgnoreCase()
+	+ Nếu bằng nhau, thì so sánh cost (float → double), dùng phép trừ ngược để sắp xếp giảm dần
+* Câu hỏi 3:
+Không thể.
+- Interface Comparable chỉ cho phép duy nhất một cách sắp xếp mặc định qua compareTo().
+- Nếu bạn cần nhiều cách sắp xếp (ví dụ: theo title, hoặc theo cost), bạn phải dùng Comparator.
+* Câu hỏi 4:
+Có 2 hướng:
+- Override lại compareTo() riêng trong DigitalVideoDisc, thay vì dùng của Media
+→ DVD.compareTo() sẽ dùng thêm length làm tiêu chí trung gian
+- Tách logic so sánh ra bằng Comparator riêng cho DVD, ví dụ DvdComparatorByTitleLengthCost
+→ Linh hoạt hơn, không phụ thuộc vào compareTo()
