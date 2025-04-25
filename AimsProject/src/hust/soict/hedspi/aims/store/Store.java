@@ -31,16 +31,11 @@ public class Store {
     }
     public Media findMediaByTitle(String title) {
         for (Media media : itemsInStore) {
-             // Sử dụng equalsIgnoreCase để tìm kiếm không phân biệt hoa thường chính xác
-             // Hoặc isMatch nếu muốn tìm chứa chuỗi
             if (media.getTitle() != null && media.getTitle().equalsIgnoreCase(title)) {
                 return media;
             }
-             // Nếu muốn tìm kiếm chứa chuỗi (không phân biệt hoa thường):
-             // if (media.isMatch(title)) {
-             //    return media;
-             // }
+            }
         }
-        return null; // Không tìm thấy
+        return null; 
     }
 }

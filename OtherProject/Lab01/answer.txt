@@ -1,0 +1,16 @@
+- Nếu chọn Cancel, do chương trình trên chỉ kiểm tra option có bằng YES_OPTION hay không, vì vậy nên kết quả sẽ trả về "U've chosen: No"
+- Tuỳ chỉnh chỉ để có 2 phương án chọn:
+	Thay:
+int option = JOptionPane.showConfirmDialog(null,"Do u want to change to the first class ticket?");
+	Bằng:
+int option = JOptionPane.showOptionDialog(
+    null,
+    "Do you want to change to the first-class ticket?",
+    "Choose an option",
+    JOptionPane.YES_NO_OPTION,
+    JOptionPane.QUESTION_MESSAGE,
+    null,
+    null,
+    null
+);
+

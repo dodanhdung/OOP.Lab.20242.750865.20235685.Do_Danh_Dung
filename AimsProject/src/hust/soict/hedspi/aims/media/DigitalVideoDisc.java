@@ -3,8 +3,6 @@ package hust.soict.hedspi.aims.media;
 public class DigitalVideoDisc extends Disc implements Playable {
     private String director;
     private int length;
-
-    // Getter
     public String getDirector() {
         return director;
     }
@@ -20,8 +18,6 @@ public class DigitalVideoDisc extends Disc implements Playable {
     public void setLength(int length) {
         this.length = length;
     }
-
-    // Constructors
     public DigitalVideoDisc(String title) {
        getTitle();
     }
@@ -49,14 +45,9 @@ public class DigitalVideoDisc extends Disc implements Playable {
     public DigitalVideoDisc(int id, String title, String category, String director, int length, float cost) {
         super(id, title, category, director, length, cost);
     }
-
-
-    // ✅ Mới: isMatch dùng để tìm kiếm theo tiêu đề
     public boolean isMatch(String title) {
         return getTitle() != null && getTitle().toLowerCase().contains(title.toLowerCase());
     }
-
-    // ✅ Mới: toString để in thông tin DVD
     @Override
     public String toString() {
         return "DVD - " + getTitle() + " - " + getCategory() + " - " + director + " - " + length + ": " + getCost() + " $";

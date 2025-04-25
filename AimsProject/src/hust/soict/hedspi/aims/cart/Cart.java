@@ -27,7 +27,6 @@ public class Cart {
         }
         return total;
     }
-    // ✅ Mới: In toàn bộ giỏ hàng
     public void printCart() {
         System.out.println("********** CART **********");
         for (Media media : itemsOrdered) {
@@ -73,6 +72,6 @@ public class Cart {
         System.out.println("Cart sorted by cost then title.");
     }
     public ArrayList<Media> getItemsOrdered() {
-        return new ArrayList<>(itemsOrdered); // Trả về bản sao để tránh sửa đổi từ bên ngoài
+        return new ArrayList<>(itemsOrdered); 
     }
 }

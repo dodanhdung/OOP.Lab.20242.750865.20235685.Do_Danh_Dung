@@ -1,0 +1,6 @@
+10.
+Có, java hỗ trợ nạp chồng constructor => khai báo nhiều constructor trong cùng 1 lớp miễn là chúng có chữ ký khác nhau.
+15.
+Java là ngôn ngữ truyền tham trị vì
+- Khi gọi swap(jungleDVD, cinderellaDVD), tiêu đề của hai DVD vẫn không đổi vì java truyền tham trị, nên khi gọi thì biến bên trong  sẽ chỉ là bản sao của tham chiếu đến biến gốc, vì thế nên chỉ  đổi tên bản sao trong hàm, không  hưởng bên ngoài
+- Sau khi gọi changeTitle(jungleDVD, cinderellaDVD.getTitle()) tại sao tiêu đề của JungleDVD lại bị thay đổi vì khi truyền biến vào hàm changeTitle, chúng ta gọi dvd.setTitle(...) → tức là đang thay đổi dữ liệu bên trong đối tượng thật=> thay đổi cả bên ngoài
