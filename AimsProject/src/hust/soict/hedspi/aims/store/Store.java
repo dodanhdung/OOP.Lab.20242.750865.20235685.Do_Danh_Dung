@@ -34,7 +34,7 @@ public class Store {
             if (media.getTitle() != null && media.getTitle().equalsIgnoreCase(title)) {
                 return media;
             }
-            }
+          
         }
         return null; 
     }
