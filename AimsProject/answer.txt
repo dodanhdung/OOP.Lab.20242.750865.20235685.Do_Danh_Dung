@@ -34,3 +34,25 @@ Có 2 hướng:
 → DVD.compareTo() sẽ dùng thêm length làm tiêu chí trung gian
 - Tách logic so sánh ra bằng Comparator riêng cho DVD, ví dụ DvdComparatorByTitleLengthCost
 → Linh hoạt hơn, không phụ thuộc vào compareTo()
+
+############################################################################################################################################################################################################################################
+Lab04 -1.3
+1. So sánh các Top-Level Container:
+AWT:
+Các top-level container chính là Frame, Dialog, và Window.
+Đây là các component "nặng" (heavyweight), nghĩa là chúng dựa vào các tài nguyên cửa sổ gốc của hệ điều hành (native peer). Mỗi Frame AWT sẽ tương ứng với một cửa sổ thực sự của hệ điều hành.
+Swing:
+Các top-level container chính là JFrame, JDialog, JWindow, và JApplet (mặc dù JApplet ít được sử dụng hiện nay).
+JFrame, JDialog, JWindow vẫn là heavyweight container vì chúng cần một cửa sổ gốc của hệ điều hành để hiển thị. Tuy nhiên, chúng hoạt động hơi khác AWT.
+Khác biệt quan trọng: Trong Swing, bạn không thêm component trực tiếp vào top-level container. Thay vào đó, bạn thêm chúng vào một content pane (khung nội dung) của top-level container. contentPane này thường là một JPanel.
+Ví dụ: jframe.getContentPane().add(myComponent);
+Swing top-level container cũng hỗ trợ các "pane" khác như JMenuBar (thanh menu) và glassPane (một pane trong suốt nằm trên cùng, hữu ích cho việc vẽ hoặc chặn sự kiện).
+2. So sánh tên lớp của các Component:
+Quy ước đặt tên:
+AWT: Tên lớp của các component thường không có tiền tố đặc biệt (ví dụ: Button, Label, TextField, Checkbox, List, Panel, Canvas).
+Swing: Hầu hết các component Swing tương ứng đều có tên bắt đầu bằng tiền tố "J" (ví dụ: JButton, JLabel, JTextField, JCheckBox, JList, JPanel, JComponent).
+Loại Component:
+AWT: Các component là "nặng" (heavyweight). Chúng phụ thuộc vào peer của hệ điều hành để vẽ và xử lý. Điều này có nghĩa là giao diện của ứng dụng AWT sẽ trông giống như các ứng dụng gốc của hệ điều hành đang chạy (ví dụ: Windows, macOS, Linux).
+Swing: Hầu hết các component Swing (ngoại trừ top-level container) là "nhẹ" (lightweight). Chúng được viết hoàn toàn bằng Java và không dựa vào peer của hệ điều hành để vẽ. Thay vào đó, chúng được vẽ bởi chính Swing. Điều này mang lại một số lợi ích:
+Khả năng tùy biến giao diện (Pluggable Look and Feel - PLAF): Swing cho phép thay đổi giao diện của ứng dụng mà không cần thay đổi mã nguồn. Bạn có thể làm cho ứng dụng Swing trông giống Windows, Motif, Metal (giao diện mặc định của Swing, độc lập với nền tảng), hoặc các giao diện tùy chỉnh khác.
+Đa dạng component hơn: Swing cung cấp một bộ sưu tập component phong phú hơn nhiều so với AWT (ví dụ: JTable, JTree, JProgressBar, JFileChooser, JColorChooser, v.v.).
