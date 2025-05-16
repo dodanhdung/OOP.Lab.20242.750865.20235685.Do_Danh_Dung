@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import hust.soict.hedspi.aims.media.Media;
 public class Store {
 	private ArrayList<Media> itemsInStore = new ArrayList<>();
+	public ArrayList<Media> getItemsInStore() {
+		return itemsInStore;
+	}
+
 
     public void addMedia(Media media) {
         if (!itemsInStore.contains(media)) {
@@ -31,16 +35,19 @@ public class Store {
     }
     public Media findMediaByTitle(String title) {
         for (Media media : itemsInStore) {
-             // Sử dụng equalsIgnoreCase để tìm kiếm không phân biệt hoa thường chính xác
-             // Hoặc isMatch nếu muốn tìm chứa chuỗi
             if (media.getTitle() != null && media.getTitle().equalsIgnoreCase(title)) {
                 return media;
             }
-             // Nếu muốn tìm kiếm chứa chuỗi (không phân biệt hoa thường):
-             // if (media.isMatch(title)) {
-             //    return media;
-             // }
+          
         }
-        return null; // Không tìm thấy
+        return null; 
+    }
+    public Media findById(int id) {
+        for (Media media : itemsInStore) { // Giả sử itemsInStore là ArrayList<Media>
+            if (media.getId() == id) {
+                return media;
+            }
+        }
+        return null;
     }
 }
