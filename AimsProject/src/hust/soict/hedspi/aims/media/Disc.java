@@ -4,7 +4,7 @@ public class Disc extends Media {
 	    private int length;
 	    private String director;
 
-	    public Disc() {
+	    public Disc(String title) {
 	        super();
 	    }
 

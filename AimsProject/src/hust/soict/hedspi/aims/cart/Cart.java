@@ -1,11 +1,33 @@
 package hust.soict.hedspi.aims.cart;
 import java.util.Collections;
 import hust.soict.hedspi.aims.media.Media;
-import java.util.ArrayList;
+import hust.soict.hedspi.aims.exception.LimitExceededException;
+import hust.soict.hedspi.aims.store.Store; // Import Store
+import javafx.collections.FXCollections; // Thêm import này
+import javafx.collections.ObservableList; // Thêm import này
+
 public class Cart {
     public static final int MAX_NUMBERS_ORDERED = 20;
-    private ArrayList<Media> itemsOrdered = new ArrayList<Media>();
-    public void addMedia(Media media) {
+    // Thay ArrayList bằng ObservableList
+    private ObservableList<Media> itemsOrdered = FXCollections.observableArrayList();
+    private Store store; // Thêm thuộc tính Store
+
+    public ObservableList<Media> getItemsOrdered() {
+        return itemsOrdered;
+    }
+
+    public Store getStore() { // Thêm getter cho Store
+        return store;
+    }
+
+    public void setStore(Store store) { // Thêm setter cho Store
+        this.store = store;
+    }
+
+    public void addMedia(Media media) throws LimitExceededException {
+        if (itemsOrdered.size() >= MAX_NUMBERS_ORDERED) {
+            throw new LimitExceededException("The cart is full. Maximum items allowed is " + MAX_NUMBERS_ORDERED);
+        }
         if (!itemsOrdered.contains(media)) {
             itemsOrdered.add(media);
             System.out.println("Media added to cart: " + media.getTitle());
@@ -70,8 +92,5 @@ public class Cart {
     public void sortByCostTitle() {
         Collections.sort(itemsOrdered, Media.COMPARE_BY_COST_TITLE);
         System.out.println("Cart sorted by cost then title.");
-    }
-    public ArrayList<Media> getItemsOrdered() {
-        return new ArrayList<>(itemsOrdered); 
     }
 }
