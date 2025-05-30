@@ -1,0 +1,328 @@
+@startuml
+
+package model.media {
+    abstract class Media implements java.lang.Comparable<Media> {
+        #id: int
+        #title: String
+        #category: String
+        #cost: float
+        + {static} COMPARE_BY_TITLE_COST: java.util.Comparator<Media>
+        + {static} COMPARE_BY_COST_TITLE: java.util.Comparator<Media>
+        +Media()
+        +Media(int, String, String, float)
+        +Media(String)
+        +Media(String, String, float)
+        +getId(): int
+        +setId(int): void
+        +getTitle(): String
+        +setTitle(String): void
+        +getCategory(): String
+        +setCategory(String): void
+        +getCost(): float
+        +setCost(float): void
+        +isMatch(String): boolean
+        +equals(Object): boolean
+        +compareTo(Media): int
+    }
+
+    interface Playable {
+        +play(): void <throws model.exception.PlayerException>
+    }
+
+    class Book {
+        -authors: java.util.ArrayList<String>
+        +Book()
+        +Book(int, String, String, float)
+        +addAuthor(String): void
+        +removeAuthor(String): void
+        +toString(): String
+    }
+    Media <|-- Book
+
+    class Disc {
+        -length: int
+        -director: String
+        +Disc(String)
+        +Disc(int, String, String, String, int, float)
+        +getLength(): int
+        +getDirector(): String
+    }
+    Media <|-- Disc
+
+    class DigitalVideoDisc {
+        -director: String
+        -length: int
+        +DigitalVideoDisc(String)
+        +DigitalVideoDisc(String, String, float)
+        +DigitalVideoDisc(String, String, String, float)
+        +DigitalVideoDisc(String, String, String, int, float)
+        +DigitalVideoDisc(int, String, String, String, int, float)
+        +getDirector(): String
+        +setDirector(String): void
+        +getLength(): int  ' Overrides Disc.getLength()
+        +setLength(int): void
+        +toString(): String
+        +isMatch(String): boolean
+    }
+    Disc <|-- DigitalVideoDisc
+    Playable <|.. DigitalVideoDisc
+
+    class Track {
+        -title: String
+        -length: int
+        +Track(String, int)
+        +getTitle(): String
+        +getLength(): int
+        +equals(Object): boolean
+    }
+    Playable <|.. Track
+
+    class CompactDisc {
+        -artist: String
+        -tracks: java.util.ArrayList<Track>
+        +CompactDisc(int, String, String, String, int, float, String)
+        +CompactDisc(String, String, float, String)
+        +getArtist(): String
+        +addTrack(Track): void
+        +removeTrack(Track): void
+        +getLength(): int ' Overrides Disc.getLength()
+        +getTracks(): java.util.ArrayList<Track>
+    }
+    Disc <|-- CompactDisc
+    Playable <|.. CompactDisc
+    CompactDisc "1" o-- "0..*" Track : contains >
+
+    class MediaComparatorByTitleCost implements java.util.Comparator<model.media.Media> {
+        +compare(Media, Media): int
+    }
+
+    class MediaComparatorByCostTitle implements java.util.Comparator<model.media.Media> {
+        +compare(Media, Media): int
+    }
+
+    Media ..> MediaComparatorByTitleCost : uses static instance
+    Media ..> MediaComparatorByCostTitle : uses static instance
+}
+
+package model.cart_store {
+    class Cart {
+        + {static} MAX_NUMBERS_ORDERED: int = 20
+        -itemsOrdered: javafx.collections.ObservableList<model.media.Media>
+        -store: Store
+        +getItemsOrdered(): javafx.collections.ObservableList<model.media.Media>
+        +addMedia(model.media.Media): void <throws model.exception.LimitExceededException>
+        +removeMedia(model.media.Media): void
+        +totalCost(): float
+        +printCart(): void
+        +searchById(int): void
+        +searchByTitle(String): void
+        +sortByTitleCost(): void
+        +sortByCostTitle(): void
+        +setStore(Store): void
+        +getStore(): Store
+    }
+    Cart "1" o-- "0..*" model.media.Media : orders >
+
+    class Store {
+        -itemsInStore: java.util.ArrayList<model.media.Media>
+        +getItemsInStore(): java.util.ArrayList<model.media.Media>
+        +addMedia(model.media.Media): void
+        +removeMedia(model.media.Media): void
+        +printStore(): void
+        +findMediaByTitle(String): model.media.Media
+        +findById(int): model.media.Media
+    }
+    Store "1" o-- "0..*" model.media.Media : stocks >
+    Cart "1" -- "1" Store : associated with >
+}
+
+package model.exception {
+    class PlayerException extends java.lang.Exception {
+        +PlayerException()
+        +PlayerException(String)
+    }
+
+    class LimitExceededException extends java.lang.Exception {
+        +LimitExceededException()
+        +LimitExceededException(String)
+    }
+}
+
+
+package application {
+    class Aims {
+        + {static} main(String[]): void
+        + {static} showMainMenu(): void
+        + {static} storeMenu(): void
+        + {static} mediaDetailsMenu(): void
+        + {static} cartMenu(): void
+        + {static} addSampleDataToStore(model.cart_store.Store): void
+        + {static} viewStore(Scanner, Store, Cart): void <throws LimitExceededException>
+        + {static} seeMediaDetails(Scanner, Media, Cart): void <throws LimitExceededException>
+        + {static} updateStore(Scanner, Store): void
+        + {static} seeCurrentCart(Scanner, Cart): void
+        + {static} playMediaConsole(Media): void
+    }
+    Aims ..> model.cart_store.Store : uses
+    Aims ..> model.cart_store.Cart : uses
+    Aims ..> Aims.AimsApplication : can launch >
+
+    package javafx_gui {
+        class "Aims.AimsApplication" as AimsAppFX extends javafx.application.Application {
+            - {static} store: model.cart_store.Store
+            - {static} cart: model.cart_store.Cart
+            +start(javafx.stage.Stage): void
+            - {static} getStackTraceAsString(Throwable): String
+        }
+        AimsAppFX ..> model.cart_store.Store : uses
+        AimsAppFX ..> model.cart_store.Cart : uses
+        AimsAppFX ..> ViewStoreController : creates & shows
+
+        class ViewStoreController {
+            -store: model.cart_store.Store
+            -cart: model.cart_store.Cart
+            -gridPane: javafx.scene.layout.GridPane
+            +ViewStoreController(Store, Cart)
+            +initialize(): void
+            +btnViewCartPressed(javafx.event.ActionEvent): void
+            -getStackTraceAsString(Throwable): String
+        }
+        ViewStoreController ..> model.cart_store.Store : uses
+        ViewStoreController ..> model.cart_store.Cart : uses
+        ViewStoreController ..> ItemController : creates & displays
+        ViewStoreController ..> ViewCartController : navigates to
+
+        class ItemController {
+            -media: model.media.Media
+            -cart: model.cart_store.Cart
+            @FXML -btnAddToCart: javafx.scene.control.Button
+            @FXML -btnPlay: javafx.scene.control.Button
+            @FXML -lblCost: javafx.scene.control.Label
+            @FXML -lblTitle: javafx.scene.control.Label
+            +ItemController(Media, Cart)
+            +initialize(): void
+            @FXML +btnAddToCartClicked(javafx.event.ActionEvent): void
+            @FXML +btnPlayClicked(javafx.event.ActionEvent): void
+            -showErrorDialog(String, String, String): void
+            -getStackTraceAsString(Throwable): String
+        }
+        ItemController ..> model.media.Media : displays
+        ItemController ..> model.cart_store.Cart : uses
+        ItemController ..> model.media.Playable : uses (plays)
+
+
+        class ViewCartController {
+            -store: model.cart_store.Store
+            -cart: model.cart_store.Cart
+            @FXML -tblMedia: javafx.scene.control.TableView<model.media.Media>
+            ' ... other FXML fields & columns
+            @FXML -lblTotalCost: javafx.scene.control.Label
+            +ViewCartController(Store, Cart)
+            +initialize(): void
+            -updateTotalCost(): void
+            -filterMedia(String): void
+            @FXML +btnPlaceOrderPressed(javafx.event.ActionEvent): void
+            @FXML +btnViewStorePressed(javafx.event.ActionEvent): void
+            @FXML +btnPlayPressed(javafx.event.ActionEvent): void
+            @FXML +btnRemovePressed(javafx.event.ActionEvent): void
+            -showErrorDialog(String, String, String): void
+            -getStackTraceAsString(Throwable): String
+        }
+        ViewCartController ..> model.cart_store.Store : uses
+        ViewCartController ..> model.cart_store.Cart : uses
+        ViewCartController ..> model.media.Media : displays in table
+        ViewCartController ..> model.media.Playable : uses (plays)
+        ViewCartController ..> ViewStoreController : navigates to
+    }
+
+    package swing_gui {
+        class AimsGUI {
+            + {static} main(String[]): void
+            - {static} addSampleData(model.cart_store.Store): void
+        }
+        AimsGUI ..> model.cart_store.Store : uses
+        AimsGUI ..> StoreManagerScreen : creates & shows
+
+        class StoreManagerScreen extends javax.swing.JFrame {
+            -store: model.cart_store.Store
+            -centerPanel: javax.swing.JPanel
+            +StoreManagerScreen(Store)
+            +createNorth(): JPanel
+            +createMenuBar(): javax.swing.JMenuBar
+            +createHeader(): javax.swing.JPanel
+            +createCenter(): javax.swing.JPanel
+            +refreshStoreView(): void
+        }
+        StoreManagerScreen ..> model.cart_store.Store : uses
+        StoreManagerScreen ..> MediaStore : displays
+        StoreManagerScreen ..> AddItemToStoreScreen : creates (AddBook, AddCD, AddDVD)
+
+        abstract class AddItemToStoreScreen extends javax.swing.JFrame {
+            #store: model.cart_store.Store
+            #parentScreen: StoreManagerScreen
+            +AddItemToStoreScreen(Store, StoreManagerScreen)
+            -createMenuBar(): JMenuBar
+            # {abstract} createInputPanel(): javax.swing.JPanel
+            #validateFloat(String): boolean
+            #validateInt(String): boolean
+        }
+        AddItemToStoreScreen ..> model.cart_store.Store : uses
+        AddItemToStoreScreen ..> StoreManagerScreen : child of
+
+        class AddBookToStoreScreen extends AddItemToStoreScreen {
+            ' - JTextField fields for book attributes (id, title, category, cost, authors)
+            +AddBookToStoreScreen(Store, StoreManagerScreen)
+            #createInputPanel(): javax.swing.JPanel
+        }
+        AddBookToStoreScreen ..> model.media.Book : creates
+
+        class AddCompactDiscToStoreScreen extends AddItemToStoreScreen {
+            ' - JTextField fields for CD attributes (id, title, category, cost, artist, director)
+            -tracksToAdd: java.util.List<model.media.Track>
+            +AddCompactDiscToStoreScreen(Store, StoreManagerScreen)
+            #createInputPanel(): javax.swing.JPanel
+            -addTrackDialog(): void
+        }
+        AddCompactDiscToStoreScreen ..> model.media.CompactDisc : creates
+        AddCompactDiscToStoreScreen ..> model.media.Track : uses (for tracksToAdd)
+
+
+        class AddDigitalVideoDiscToStoreScreen extends AddItemToStoreScreen {
+            ' - JTextField fields for DVD attributes (id, title, category, director, length, cost)
+            +AddDigitalVideoDiscToStoreScreen(Store, StoreManagerScreen)
+            #createInputPanel(): javax.swing.JPanel
+        }
+        AddDigitalVideoDiscToStoreScreen ..> model.media.DigitalVideoDisc : creates
+
+        class MediaStore extends javax.swing.JPanel {
+            -media: model.media.Media
+            +MediaStore(Media, StoreManagerScreen)
+        }
+        MediaStore ..> model.media.Media : displays
+        MediaStore ..> model.media.Playable : uses (plays)
+    }
+}
+
+' Exception throwing/handling relationships
+model.media.Playable ..> model.exception.PlayerException : throws
+model.media.DigitalVideoDisc ..> model.exception.PlayerException : throws (via play)
+model.media.CompactDisc ..> model.exception.PlayerException : throws (via play)
+model.media.Track ..> model.exception.PlayerException : throws (via play)
+
+model.cart_store.Cart ..> model.exception.LimitExceededException : throws (via addMedia)
+
+application.javafx_gui.ItemController ..> model.exception.LimitExceededException : handles
+application.javafx_gui.ItemController ..> model.exception.PlayerException : handles
+application.swing_gui.MediaStore ..> model.exception.PlayerException : handles (indirectly via Playable.play())
+application.javafx_gui.ViewCartController ..> model.exception.PlayerException : handles
+
+' Notes on external libraries (implied base classes or types)
+note "java.lang.Comparable" as N_Comparable
+note "java.util.Comparator" as N_Comparator
+note "java.util.ArrayList, java.util.List" as N_JavaUtilCollections
+note "javafx.collections.ObservableList" as N_JavaFXCollections
+note "java.lang.Exception" as N_Exception
+note "javafx.application.Application, javafx.stage.Stage, javafx.scene.layout.GridPane, etc." as N_JavaFX_UI
+note "javax.swing.JFrame, javax.swing.JPanel, etc." as N_Swing_UI
+
+@enduml

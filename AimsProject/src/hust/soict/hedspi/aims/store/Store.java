@@ -2,11 +2,12 @@ package hust.soict.hedspi.aims.store;
 
 import java.util.ArrayList;
 import hust.soict.hedspi.aims.media.Media;
+
 public class Store {
-	private ArrayList<Media> itemsInStore = new ArrayList<>();
-	public ArrayList<Media> getItemsInStore() {
-		return itemsInStore;
-	}
+    private ArrayList<Media> itemsInStore = new ArrayList<>();
+    public ArrayList<Media> getItemsInStore() {
+        return itemsInStore;
+    }
 
 
     public void addMedia(Media media) {
@@ -27,23 +28,23 @@ public class Store {
     }
 
     public void printStore() {
-        System.out.println("********** STORE **********");
+        System.out.println("********** STORE **********\n");
         for (Media media : itemsInStore) {
             System.out.println(media.toString());
         }
-        System.out.println("***************************");
+        System.out.println("***************************\n");
     }
     public Media findMediaByTitle(String title) {
         for (Media media : itemsInStore) {
             if (media.getTitle() != null && media.getTitle().equalsIgnoreCase(title)) {
                 return media;
             }
-          
+
         }
-        return null; 
+        return null;
     }
     public Media findById(int id) {
-        for (Media media : itemsInStore) { // Giả sử itemsInStore là ArrayList<Media>
+        for (Media media : itemsInStore) {
             if (media.getId() == id) {
                 return media;
             }

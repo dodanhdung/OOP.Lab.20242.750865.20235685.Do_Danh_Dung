@@ -1,5 +1,6 @@
 package hust.soict.hedspi.aims.screen.manager;
 
+import hust.soict.hedspi.aims.exception.PlayerException;
 import hust.soict.hedspi.aims.media.Media;
 import hust.soict.hedspi.aims.media.Playable;
 
@@ -35,7 +36,11 @@ public class MediaStore extends JPanel {
                     JLabel playingLabel = new JLabel("Playing: " + media.getTitle(), SwingConstants.CENTER);
                     playingLabel.setFont(new Font(playingLabel.getFont().getName(), Font.BOLD, 16));
                     playDialog.add(playingLabel);
-                    ((Playable) media).play();
+                    try {
+                        ((Playable) media).play();
+                    } catch (PlayerException ex) {
+                        throw new RuntimeException(ex);
+                    }
 
                     playDialog.setVisible(true);
                 }
